@@ -157,9 +157,10 @@ func add(a, b uint32) uint32 {
 
 func sub(a, b uint32) uint32 {
 	var unused uint32 = a & B1B3
-	a &= B0B2
-	b &= B0B2
-	return ((a - b) & B0B2) | unused
+
+	var result1 uint32 = (a - b) & 0xff
+	var result2 uint32 = (((a >> 16) - (b >> 16)) & 0xff) << 16
+	return result1 | result2 | unused
 }
 
 func xor(a, b uint32) uint32 {
