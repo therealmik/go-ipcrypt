@@ -71,11 +71,13 @@ func Decrypt(key Key, ip [4]byte) [4]byte {
 
 func fwd(s uint32) uint32 {
 	s = add(s, s>>8)
-	s = rotlb1b3(s, 2, 5)
+	s = rotl(s, 2, B1)
+	s = rotl(s, 5, B3)
 	s = xor(s, s<<8)
 	s = rotl(s, 4, B0)
 	s = add(s, (s<<8)|(s>>24))
-	s = rotlb1b3(s, 3, 7)
+	s = rotl(s, 3, B1)
+	s = rotl(s, 7, B3)
 	s = xor(s, (s<<24)|(s>>8))
 	s = rotl(s, 4, B2)
 
@@ -85,28 +87,16 @@ func fwd(s uint32) uint32 {
 func bwd(s uint32) uint32 {
 	s = rotl(s, 4, B2)
 	s = xor(s, (s<<24)|(s>>8))
-	s = rotlb1b3(s, 5, 1)
+	s = rotl(s, 5, B1)
+	s = rotl(s, 1, B3)
 	s = sub(s, (s<<8)|(s>>24))
 	s = rotl(s, 4, B0)
 	s = xor(s, s<<8)
-	s = rotlb1b3(s, 6, 3)
+	s = rotl(s, 6, B1)
+	s = rotl(s, 3, B3)
 	s = sub(s, s>>8)
 
 	return s
-}
-
-func rotlb1b3(b uint32, ra, rb uint) uint32 {
-	var unused uint32 = b & B0B2
-	var a uint32 = b & B1
-	b = b & B3
-
-	a = (a << ra) | (a >> (8 - ra))
-	a &= B1
-
-	b = (b << rb) | (b >> (8 - rb))
-	b &= B3
-
-	return a | b | unused
 }
 
 func rotl(b uint32, r uint, mask uint32) uint32 {
@@ -135,6 +125,5 @@ func sub(a, b uint32) uint32 {
 }
 
 func xor(a, b uint32) uint32 {
-	var unused uint32 = a & B0B2
-	return ((a ^ b) & B1B3) | unused
+	return a ^ (b & B1B3)
 }
