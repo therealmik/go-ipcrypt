@@ -70,20 +70,6 @@ func Decrypt(key Key, ip [4]byte) [4]byte {
 }
 
 func fwd(s uint32) uint32 {
-	// b0 += b1
-	// b2 += b3
-	// b1 = rotl(b1, 2)
-	// b3 = rotl(b3, 5)
-	// b1 ^= b0
-	// b3 ^= b2
-	// b0 = rotl(b0, 4)
-	// b0 += b3
-	// b2 += b1
-	// b1 = rotl(b1, 3)
-	// b3 = rotl(b3, 7)
-	// b1 ^= b2
-	// b3 ^= b0
-	// b2 = rotl(b2, 4)
 	s = add(s, s>>8)
 	s = rotlb1b3(s, 2, 5)
 	s = xor(s, s<<8)
@@ -97,21 +83,6 @@ func fwd(s uint32) uint32 {
 }
 
 func bwd(s uint32) uint32 {
-	// b2 = rotl(b2, 4)
-	// b1 ^= b2
-	// b3 ^= b0
-	// b1 = rotl(b1, 5)
-	// b3 = rotl(b3, 1)
-	// b2 -= b1
-	// b0 -= b3
-	// b0 = rotl(b0, 4)
-	// b1 ^= b0
-	// b3 ^= b2
-	// b1 = rotl(b1, 6)
-	// b3 = rotl(b3, 3)
-	// b0 -= b1
-	// b2 -= b3
-
 	s = rotl(s, 4, B2)
 	s = xor(s, (s<<24)|(s>>8))
 	s = rotlb1b3(s, 5, 1)

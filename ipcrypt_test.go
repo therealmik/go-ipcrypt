@@ -13,7 +13,7 @@ func TestFwdBwd(t *testing.T) {
 		r := fwd(s)
 		q := bwd(r)
 		if q != s {
-			t.Errorf("fwd(%08x) = %08x; bwd(%08x) = %08x (diff=%08x)", s, r, r, q, s ^ q)
+			t.Errorf("fwd(%08x) = %08x; bwd(%08x) = %08x (diff=%08x)", s, r, r, q, s^q)
 		}
 	}
 }
